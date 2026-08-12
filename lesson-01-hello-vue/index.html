@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>第 1 课：Hello Vue</title>
+  <style>
+    body {
+      font-family: "Microsoft YaHei", sans-serif;
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 0 20px;
+      line-height: 1.7;
+    }
+    .card {
+      border: 1px solid #e5e7eb;
+      border-radius: 8px;
+      padding: 16px 20px;
+      margin: 12px 0;
+      background: #fafafa;
+    }
+    .tag {
+      display: inline-block;
+      background: #42b883;
+      color: #fff;
+      border-radius: 4px;
+      padding: 2px 8px;
+      font-size: 12px;
+      margin-right: 6px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🌱 第 1 课：创建应用与模板语法</h1>
+
+  <div id="app"><!--
+    重点 1：模板语法
+    双花括号 {{ }} 做文本插值，Vue 会把里面的表达式计算结果渲染到页面上。
+    页面上的内容会跟随 data 里的数据"响应式"地更新。
+  -->
+  <div class="card">
+    <span class="tag">文本插值</span>
+    <p>你好，{{ name }}！今天是 {{ date }}</p>
+  </div>
+
+  <!--
+    重点 2：v-html
+    插值 {{ }} 只能输出纯文本，v-html 可以把 HTML 字符串真正渲染为元素。
+    注意：不要对用户输入使用 v-html，存在 XSS 安全风险。
+  -->
+  <div class="card">
+    <span class="tag">v-html</span>
+    <div v-html="htmlContent"></div>
+  </div>
+
+  <!--
+    重点 3：v-bind（可简写为 :）
+    把 data 里的值动态绑定到元素的属性上。
+    下面这个例子中 img 的 src 来自数据 picUrl。
+  -->
+  <div class="card">
+    <span class="tag">v-bind 简写 :</span>
+    <p>图片地址来自数据：{{ picUrl }}</p>
+    <img :src="picUrl" :alt="name" width="120" />
+  </div>
+
+  <!--
+    重点 4：v-if / v-else
+    条件渲染。isVip 为 true 时显示第一个元素，否则显示第二个。
+  -->
+  <div class="card">
+    <span class="tag">v-if / v-else</span>
+    <p v-if="isVip" style="color: #d97706">🌟 VIP 会员欢迎你！</p>
+    <p v-else style="color: #6b7280">注册会员可解锁更多课程</p>
+    <button @click="toggleVip">切换会员状态</button>
+  </div>
+
+  <!--
+    重点 5：v-for
+    列表渲染，遍历数组。
+    建议为每个元素提供 key，Vue 用它来高效复用和更新元素。
+  -->
+  <div class="card">
+    <span class="tag">v-for</span>
+    <ul>
+      <li v-for="(lesson, index) in lessons" :key="lesson">
+        {{ index + 1 }}. {{ lesson }}
+      </li>
+    </ul>
+  </div>
+
+  </div><!-- /#app -->
+
+  <!-- 引入 Vue 3 的 CDN 版本 -->
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <script>
+    // createApp 创建 Vue 应用，mount 把它挂载到指定的 DOM 节点上
+    const { createApp } = Vue
+
+    createApp({
+      // data 是应用的数据源，模板里的变量都来自这里
+      data() {
+        return {
+          name: '同学',
+          date: new Date().toLocaleDateString('zh-CN'),
+          htmlContent: '<strong style="color:#42b883">这是通过 v-html 渲染的加粗文字</strong>',
+          picUrl: 'https://vuejs.org/images/logo.png',
+          isVip: true,
+          lessons: ['创建应用', '模板语法', '事件处理', '组件开发']
+        }
+      },
+      // methods 里定义方法，供模板和事件绑定调用
+      methods: {
+        toggleVip() {
+          this.isVip = !this.isVip
+        }
+      }
+    }).mount('#app')
+  </script>
+</body>
+</html>
